@@ -1,0 +1,14 @@
+*.class
+*.un~
+*.jar
+*.log
+.bsp
+.idea
+logs
+project/project
+project/target
+target
+app-logs
+modules/**/target
+dumps
+null
