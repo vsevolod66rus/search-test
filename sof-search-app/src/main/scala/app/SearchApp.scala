@@ -2,7 +2,7 @@ package app
 
 import buildinfo.BuildInfo
 import app.controllers.SearchController
-import app.services.{ErrorHandlerService, SearchService}
+import app.services.{ErrorHandlerService, ExternalSearchService, SearchService}
 import cats.effect.{Async, Resource}
 import common.client.Http4sClient
 import common.models.configs.ApplicationConfig
@@ -19,8 +19,9 @@ object SearchApp extends WSApp[ApplicationConfig] {
     client <- Http4sClient[F](conf.clientConfig)
 
     // Services
-    errorService  <- ErrorHandlerService[F]
-    searchService <- SearchService[F](client, conf.serviceConfig, conf.searchConfig)
+    errorService          <- ErrorHandlerService[F]
+    externalSearchService <- ExternalSearchService[F](client, conf.serviceConfig, conf.searchConfig)
+    searchService         <- SearchService[F](externalSearchService, conf.serviceConfig)
 
     // Controllers
     searchController <- SearchController[F](searchService, errorService)
